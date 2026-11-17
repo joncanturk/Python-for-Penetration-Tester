@@ -4,3 +4,7 @@ __pycache__/
 *.pcap
 *.pcapng
 *.png
+build/
+dist/
+*.egg-info/
+results/

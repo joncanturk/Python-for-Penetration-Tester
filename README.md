@@ -4,6 +4,23 @@ Small, inspectable Python tools for authorized security labs. Every script has a
 
 ## Requirements
 
+### Install the unified CLI
+
+From a checkout of this branch, in an activated virtual environment:
+
+```sh
+python -m pip install .
+pentestlab --help
+pentestlab scan --xml examples/nmap.xml --output scan.json
+pentestlab report scan.json --format markdown --output report.md
+```
+
+Optional packet tools: `python -m pip install ".[pcap]"`. Desktop extra: `python -m pip install ".[desktop]"`. The distribution name is `joncanturk-pentestlab`; the installed command is `pentestlab`. It has not been published to PyPI. Source-tree usage is also supported via `python -m pentestlab`.
+
+The unified CLI provides `scan`, `headers`, `pcap` (existing-capture SSID extraction), and `report`. Legacy scripts remain available. JSON results share schema version, tool version, UTC timestamp, command, target, options, status, observations and errors. Operational failures return a structured error result and exit 2; argument/output errors are printed to stderr. Existing output files are never overwritten. Markdown reports validate all inputs first and retain source observations in fenced JSON rather than assigning unsubstantiated vulnerability scores.
+
+See [local lab workflows](docs/labs.md) and [result format](docs/results.md).
+
 - Python 3.11+; core tools and all `--help` commands need no third-party Python libraries.
 - Nmap on PATH for live scans; XML inspection works offline without Nmap.
 - PCAP tools: `python -m pip install -r requirements-pcap.txt`.
@@ -58,9 +75,9 @@ python -m pip install -r requirements-pcap.txt
 python -m unittest discover -s tests -v
 ```
 
-The suite contains 19 tests, including two optional Scapy tests. CI installs Scapy and runs Windows/Ubuntu with Python 3.11/3.13. Coverage includes imports/help, argument validation, MD5 edge cases, Nmap XML and timeout errors, HTTP behavior, MAC state restoration, socket cleanup, PCAP generation and SSID layers.
+The suite contains 27 tests, including two optional Scapy tests. CI installs the package with Scapy and runs Windows/Ubuntu with Python 3.11/3.13. Coverage includes imports/help, argument validation, MD5 edge cases, Nmap XML and timeout errors, HTTP behavior, MAC state restoration, socket cleanup, PCAP generation, SSID layers, result validation and reporting. Two integration tests start their own short-lived loopback HTTP/TCP servers on OS-selected ports; they never interact with an existing service on port 8000. CI also invokes the installed console command outside the source directory.
 
-Network/system effects are mocked. Live scans, screenshots, monitor-mode capture and privileged interface changes are not exercised. Desktop and hardware behavior require separate environment-specific validation. MD5 matching is educational; MD5 is unsuitable for password storage. XML/PCAP parsing is intended for small lab inputs, not a hardened public ingestion service.
+External network/system effects are mocked; real integration connections are confined to the tests' own loopback services. Live Nmap scans, screenshots, monitor-mode capture and privileged interface changes are not exercised. Desktop and hardware behavior require separate environment-specific validation. MD5 matching is educational; MD5 is unsuitable for password storage. XML/PCAP parsing is intended for small lab inputs, not a hardened public ingestion service.
 
 Exit status: 0 for completion, 2 for usage/operational errors; MD5 also returns 1 for no match. No hosts in Nmap output is a valid result, not automatically an error.
 
