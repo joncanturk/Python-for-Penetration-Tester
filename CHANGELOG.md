@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — Unified interface
+
+- Installable package and `pentestlab scan`, `headers`, `pcap`, `report` commands.
+- Versioned JSON observation envelopes and validated Markdown reports.
+- Exclusive output creation and structured operational failures.
+- Real ephemeral-loopback HTTP/TCP integration tests and installed-command CI checks.
+- Three documented lab workflows; legacy entry points remain compatible.
+
 ## Unreleased — 2026-11-17
 
 - Python 3.11+ entry points, side-effect-free imports and argparse help throughout.
